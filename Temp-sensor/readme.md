@@ -26,8 +26,8 @@ The formula given is :
   
 ![adc-temp-formula](https://github.com/user-attachments/assets/36a52585-5e9e-45a9-a5bf-52f3e3751464)
 
-Now the problem is that the correction factor TS_OFFSET and TS_GAIN are usually nowhere to be seen in the device signature octets, as advertised by the datasheet. So here is a way around to get reasonable data.<br>
-First note that the formula add 25. So for 25°C measured, it means that the dividend must be equal zero. All we have to do is obtain the ADC value when the case temperature is 25° (measured with a digital thermometer)<br>
+Now the problem is that the correction factor TS_OFFSET and TS_GAIN are usually nowhere to be seen in the device signature octets, as advertised by the datasheet. We propose here is a way around to get reasonable data.<br>
+First note that the formula add 25. So for 25°C measured, it means that the dividend of the formula must be equal zero. All we have to do is then to obtain the ADC value when the case temperature is 25° (measured with a digital thermometer)<br>
 Once you have a reasonable value for 25°, you can calculate TS_OFFSET with :<br>
 TS_OFFSET = ADCW - (273 + 100), with ADCW = (ADCH<<8) + ADCL). For my device at 25° the raw value was 317 (ie 0.317v measured by the conversion), which gives an offset of 56.<br>
 To get TS_GAIN will be more complicated. A crude way is put the device directly into a freezer for a while : it can support Celsius t° between -40° and +80° according to the Arduino Nano datasheet, but do it at your own risk anyway :-).<br>
@@ -35,10 +35,10 @@ Just program the device before so that it can send the raw ADC value of the temp
 Remove the device from freezer, connect it quickly to the PC/serial line and take note of the ADC value plus that of a digital thermometer applied to the device case. For exemple measured at 5°, my device yielded a raw value of 294.
 You can also put the device close to a lamp so it can heat up to relatively high temperature (beware burning etc.) Do not go other 50°C.<br>
 The idea here is to go as extreme as possible, so that the impact of the ambiant temperature far surpass that of the internal working temperature in normal condition.<br>
-Once you have some raw values for given temperatures, there will be only one unknown left in the equation, namely :
-[(raw value - (373 - offset)) * 128] / x + 25 (note : we will iggnore the * 128 coefficient for now) <br>
+Once you have some raw values for given temperatures, there will be only one unknown y (for gain) left in the equation, namely :
+[(raw value - (373 - offset)) * 128] / y + 25 (note : we will iggnore the * 128 coefficient for now) <br>
 For 5° = 294 it gives : <br>
-(294 - (373 - 56)) / gain + 25 = 5 <-> gain = -2944 / -20 = 147.2. We then need to divide this value by 128 : "TS_GAIN is the unsigned fixed point 8-bit temperature sensor gain factor in
+(294 - (373 - 56)) / y + 25 = 5 <-> y = -2944 / -20 = 147.2. We then need to divide this value by 128 : "TS_GAIN is the unsigned fixed point 8-bit temperature sensor gain factor in
 1/128th units."<br>
 TS_GAIN = 147.2 / 128 = 1.15 in my case.<br>
 <br>
