@@ -10,7 +10,7 @@ Here is a basic description of the captor technology used in these devices, from
 This basically tells us that the sensor will measure not the ambiant air temperature, but the temperature/heat of the internal silicon die dissipated at the junction with the chip case. As the internal silicon die temperature will vary with the current/load used by the chip in relation with the activation of its pins, it means this internal sensor will be closed to the ambiant air only while practically idle, at least with no active output pins sourcing current. 
 <br>
 The last line simply tells us that due to the manufactoring process, each device needs some kind of indivudual calibration to reflect the real temperature of the device. <br>
-Below is the ADC topologu schematic used in the ATmega328P :<br>
+Below is the ADC topology schematic used in the ATmega328P :<br>
 <br>
 ![Atmega328P-adc-schematic](https://github.com/user-attachments/assets/8b8b184a-34a8-4d6d-be8f-38e35d60fb3a)
 <br>
