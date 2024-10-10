@@ -1,19 +1,20 @@
 There is a lot of confusion regarding the inernal temperature sensor of the AVR ATmega 8bits device, most notably the ATmega328p used in the Arduino Nano for example.
-This is a small synthetisis of three AVR documents regarding this feature : <br>
+This is a small synthetisis of three AVR documents regarding this feature :
+<p>
 <a href="https://ww1.microchip.com/downloads/en/AppNotes/Atmel-8108-Calibration-of-the-AVRs-Internal-Temperature-Reference_ApplicationNote_AVR122.pdf">AVR122: Calibration of the AVR's Internal Temperature Reference</a><br>
 <a href="https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf">ATmega328P datasheet, 2015</a><br>
-<a href="https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf">megaAVR datasheet, 2018</a><br>
-
-Here is a basic description of the captor technology used in these devices, from AVR122 :<br>
+<a href="https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf">megaAVR datasheet, 2018</a>
+</p>
+Here is a simple description of the captor technology used in these devices, from AVR122 :<br>
 "The temperature measurement is based on an on-chip temperature sensor that is coupled to a single ended ADC channel [actually ADC8 - see schematic below]. The sensor is a diode that produces a temperature dependent voltage. The voltage has a linear relationship to temperature and the result has approximately a 1 LSB/°C correlation to temperature ... The diode voltage is highly linear, but due to process variations the temperature sensor output voltage varies from one chip to another."<br>
 <br>
 This basically tells us that the sensor will measure not the ambiant air temperature, but the temperature/heat of the internal silicon die dissipated at the junction with the chip case. As the internal silicon die temperature will vary with the current/load used by the chip in relation with the activation of its pins, it means this internal sensor will be closed to the ambiant air only while practically idle, at least with no active output pins sourcing current. 
 <br>
 The last line simply tells us that due to the manufactoring process, each device needs some kind of indivudual calibration to reflect the real temperature of the device. <br>
 Below is the ADC topology schematic used in the ATmega328P :<br>
-<br>
-![Atmega328P-adc-schematic](https://github.com/user-attachments/assets/8b8b184a-34a8-4d6d-be8f-38e35d60fb3a)
-<br>
+<p>
+[Atmega328P-adc-schematic](https://github.com/user-attachments/assets/8b8b184a-34a8-4d6d-be8f-38e35d60fb3a)
+</p>
 The sensor is again really a simple diode, which voltage drop varies linearly according to the temperature. The ADC chanel reads the actual voltage across the diode, and output the converted value.<br>
 Now the AVR122 note explains that the ADC output is equal to the temperature in Kelvin (K). So T = 0°C should ideally be equal to ADC = 273 ; and ADC = 0 would be equal to absolute zero, -273°C... This is in theory ; for the reasons already given, it is never the case, and we need to adjust or compensate the ADC result.<br>
 
