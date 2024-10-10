@@ -13,7 +13,9 @@ This basically tells us that the sensor will measure not the ambiant air tempera
 The last line simply tells us that due to the manufactoring process, each device needs some kind of indivudual calibration to reflect the real temperature of the device. <br>
 Below is the ADC topology schematic used in the ATmega328P :
 <p>
+  
 ![Atmega328P-adc-schematic](https://github.com/user-attachments/assets/8b8b184a-34a8-4d6d-be8f-38e35d60fb3a)
+
 </p>
 The sensor is again really a simple diode, which voltage drop varies linearly according to the temperature. The ADC chanel reads the actual voltage across the diode, and output the converted value.<br>
 Now the AVR122 note explains that the ADC output is equal to the temperature in Kelvin (K). So T = 0°C should ideally be equal to ADC = 273 ; and ADC = 0 would be equal to absolute zero, -273°C... This is in theory ; for the reasons already given, it is never the case, and we need to adjust or compensate the ADC result.<br>
@@ -30,13 +32,19 @@ Put it simply, it means that instead of reading y = x, with y = ADC value and X 
 So to have a correct reading of the ADC value, we'll need to have y - 8 = x : or y = x + 8. This would be the OFFSET or TS_OFFSET in the datasheet.<br>
 See diagram below :
 <p>
+  
 ![temp-offset](https://github.com/user-attachments/assets/1e032c5f-2e1d-43bd-9e2c-236657029c4f)
+
 </p>
+The blue dashed line is the ideal condition.<br>
+The red dotted line is the line between two "arbitrary" calibration points ; for example one taken at 25°C, the other at 0°C or 50°C.
 The second correction is called gain factor (or TS_GAIN in datsheet), and is a result of the slope / coefficient of the line not being strictly = 1, because of the 1.1V reference voltage slightly varying for example.<br>
 <p>
+  
 ![temp-gain](https://github.com/user-attachments/assets/3d4f7c53-6190-47c7-8eee-6f37fdb4c80d)
+
 </p>
-Basically we are trying to find the slope or coeffient "a" in the equation y = ax + b.
+Basically we are trying to find the slope or coeffient "a" in the equation y = ax + b, and cancel or compensate for it.
 <br>
 One other interesting thing to note is the difference in datasheets 2015 & 2018 regarding the presentation of the internal temperature sensor (Analog to digital conversion / temperature measurement section).<br>
 2018 edition says for typical values : <br>
