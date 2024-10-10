@@ -25,7 +25,7 @@ To sum up :<br>
 <br>
 In the ideal world, ADC(0°C) = 273 = IRL(0°C)
 We read further in AN122 : "The offset error is the distance between the origin of coordinates and the point where the line defined by the two calibration points intersects the y-axis."<br>
-Put it simply, it means that instead of reading y = x, with y = ADC value and X real life temperature, ie ADC(0°C) = IRL(0°C), we'll have y = x + b. For exemple, instead of reading ADC(0°) = 273 for IRL(0°), we could have ADC(0°) = 280. It means we have an offset of +8 relative to IRL(0°). <br>
+Put it simply, it means that instead of reading y = x, with y = ADC value and X real life temperature, ie ADC(0°C) = IRL(0°C), we'll have y = x + b, b being the offset. For exemple, instead of reading ADC(0°) = 273 for IRL(0°), we could have ADC(0°) = 280. It means we have an offset of +8 relative to IRL(0°). <br>
 So to have a correct reading of the ADC value, we'll need to have y - 8 = x : or y = x + 8. This would be the OFFSET or TS_OFFSET in the datasheet.<br>
 See diagram below : <br>
 <br>
