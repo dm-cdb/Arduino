@@ -48,16 +48,20 @@ Basically we are trying to find the slope or coeffient "a" in the equation y = a
 <br>
 One other interesting thing to note is the difference in datasheets 2015 & 2018 regarding the presentation of the internal temperature sensor (Analog to digital conversion / temperature measurement section).<br>
 2018 edition says for typical values : <br>
+<pre>
   Table 24-2. Temperature vs. Sensor Output Voltage (Typical Case) <br>
-Temperature / °C   -45°C   +25°C   +85°C <br>
+Temperature / °C   -45°C   +25°C   +85°C
 Voltage / mV       242mV   314mV   380mV <br>
 (Respectively ADC value of 242, 314, 380)<br>
+</pre>
 <br>
 2015 edition : <br>
+<pre>
 Table 23-2. Sensor Output Code versus Temperature (Typical Values) <br>
-Temperature/°C     –40°C   +25°C   +125°C <br>
+Temperature/°C     –40°C   +25°C   +125°C
 ADC raw value      0x010D   0x0160   0x01E0 <br>
 (Respectively ADC/mV value of 269, 352, 480)<br>
+</pre>
 <br>
 In three years interval, quite some discreapancy in the typical values ! So unfortunately, we cannot rely on these typical values to calulate a reasonable output.<br>
 <br>
@@ -67,21 +71,24 @@ Also we note two different approches to make for compensation: <br>
 <br>
 We don't have further explainations in the 2018 datasheet, except that a calibration must be done, and the result stored in EEPROM ; how it should be done, no clue. We can only assume that T = temperature in Kelvin.<br>
 The 2015 datasheet explains that TS_OFFSET and TS_GAIN can be found in the Signature Bytes respectively at address 0x0002 and 0x0003. However actually no useful data can be retrieved from these addresses. <br>
-The following explains how to simply calibrate a device.
+<p>
+  The following explains how to simply calibrate a device.
+</p>
 <br>
-
 <u>Setup :</u><br>
-ADC8 where the temperature sensor is connected, cannot be accessed by an Arduino digitalWrite() function. We need to be a level a little lower.
+<br>
+ADC8 where the temperature sensor is connected cannot be accessed by an Arduino digitalWrite() function. We need to be a level a little lower.
 Details of how to set up the configuration to read the sensor can be obtained from the 2015 Atmega328P datasheet p. 214.<br>
   - Select the 1.1V internal reference volatge. This is done by setting bits REFS1 and RFS0 of ADMUX register to 1 respectively (there is no need to set any pin to input mode, since this is a dedicated channel). <br>
   - Select channel 8 by setting bit of MUX3 of ADMUX register.
-  - Next set the prescaler for the correct conversion clocking. It requires an input clock frenquency between 50kHz and 200kHz for maximum resolution (10 bits).<br>
+  - Next set the prescaler for the correct conversion clocking. It requires an input clock frequency between 50kHz and 200kHz for maximum resolution (10 bits).<br>
   - For a 16Mhz Arduino Nano, a prescaler of 128 will yield a 125kHz clock. Set then ADPS2 to ADPS0 bits of ADCSRA register to 1.<br>
   <br>
-
-First note that the formula used in datasheet 2015 add 25. So if we were to measure a Atmega328p case at 25°C, it means that the dividend of the formula must be equal zero. All we have to do is then to obtain the ADC value when the case temperature is 25° (measured with a digital thermometer)<br>
+<u>Calibrate:</u><br>
+<br>
+First note that the formula used in datasheet 2015 add 25. So if we were to measure a Atmega328p case at 25°C, it means that the dividend part of the formula must be equal zero. All we have to do is then to obtain the ADC value when the case temperature is 25° (measured with a digital thermometer)<br>
 You can then calculate TS_OFFSET with :<br>
-TS_OFFSET = ADCW - (273 + 100), with ADCW = (ADCH<<8) + ADCL). For my device at 25° the raw value was 317 (ie 0.317v measured by the conversion ; pretty close to typical value of 2018 datasheet), which gives an offset of 56.<br>
+TS_OFFSET = ADCW - (273 + 100), with ADCW = (ADCH<<8) + ADCL). For my device at 25° the raw value was 317 (ie 0.317v measured by the ADC conversion ; pretty close to typical value of 2018 datasheet), which gives an offset of 56.<br>
 To get TS_GAIN will be more complicated. A crude way is put the device directly into a freezer for a while : it can support Celsius T° between -40° and +80° according to the Arduino Nano datasheet, but do it at your own risk anyway :-).<br>
 Just program the device before so that it can send the raw ADC value of the temperature sensor on the serial monitor.<br>
 Remove the device from freezer, connect it quickly to the PC/serial line and take note of the ADC value, plus that of a digital thermometer applied to the device case. For exemple measured at 5°, my device yielded a raw value of 294.
