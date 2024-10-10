@@ -44,7 +44,7 @@ The second correction is called gain factor (or TS_GAIN in datsheet), and is a r
 ![temp-gain](https://github.com/user-attachments/assets/3d4f7c53-6190-47c7-8eee-6f37fdb4c80d)
 
 </p>
-Basically we are trying to find the slope or coeffient "a" in the equation y = ax + b, and cancel or compensate for it.
+Basically we are trying to find the slope or coeffient "a" in the equation y = ax + b, and cancel or compensate for it.<br>
 <br>
 One other interesting thing to note is the difference in datasheets 2015 & 2018 regarding the presentation of the internal temperature sensor (Analog to digital conversion / temperature measurement section).<br>
 2018 edition says for typical values : <br>
