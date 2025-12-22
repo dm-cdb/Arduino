@@ -47,9 +47,6 @@ You get the picture... So there is no way to distinguish between a -9,0°C and a
 The negative temperature bit is set in the MSB bit of the temperature decimal byte (since the precision is just one decimal, only the last 4 bits will be used). When set, the sensor outputs a negative temperature. <br>
 The code just test the presence of this bit, then clears it to compute the decimal part.
 
-The code is made specificaly for the DHT11, but is very simple to adapt to other AOSONG products like the DHT22/AM2302 - as long as they use the same one wire protocol.<br>
-Note : no need for external libraries.<br>
-
 Please be careful : DHT11 bundled with a breakout board are usually sold with the pull up resistor included ; for "raw" DHT11, place a pull up resistor as specfied in the datasheet between PIN2 and VCC (5k - 10k is OK).<br>
 Most of the bundled DHT11 are actually clones with limited specs.
 
