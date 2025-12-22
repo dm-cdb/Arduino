@@ -1,7 +1,24 @@
-This is a very simple code to read the humidity and temperature data from an guenine ASAIR/AOSONG DHT11 sensor.<br>
+** Important **<br>
+- The code is based on the ASAIR documentation Version Number:V1.3_20170331<br>
+- This documentation states that ONLY the decimal byte of Humidity is always zero.<br>
+- Other documentations claim that the decimal Temperature byte is also always zero. It appears to be not true for guenine ASAIR DHT11 modules.
+
+Here is how the data stream is sent (MSB first) :
+
+|Bytes  | Data               |
+|-------|--------------------|
+Byte 1  | Humidity integer   |
+Byte 2  | Humidity decimal   |
+Byte 3  | Temperature integer|
+Byte 4  | Temperature decimal|
+Byte 5  | Parity check       |
+
+The present Arduino code is very simple for reading the humidity and temperature data from an guenine ASAIR/AOSONG DHT11 sensor.<br>
+It should also be able to read clones as well : what can do the more can do the less.
+
 Please note that a guenine ASAIR DHT11 Temperature and Humidity Sensor Module supports :<br>
-- Tempature range from -20°C to + 60°C (unlike cheap clones that support only 0°C to + 50°C).<br>
-- Humidity range from 5% to 95% (unlike cheap clones that support only 20% to 95%).<br>
+- Tempature range from -20°C to + 60°C (unlike clones that support only 0°C to + 50°C).<br>
+- Humidity range from 5% to 95% (unlike clones that support only 20% to 95%).<br>
 
 Offical web site : https://www.aosong.com/en/Products/info.aspx?itemid=2257&lcid=139
 
@@ -25,10 +42,16 @@ Humidity: 18 %  Temperature: -10,0 °C <---------- should be -11°C
 Humidity: 18 %  Temperature: -11,1 °C
 ```
 
-You get the picture... So there is no way to distinguish between a -4,0C° and a -5,0°C - as far as I know.<br>
-The code is made specificaly for the DHT11, but is very simple to adapt to other AOSONG products like the DHT22/AM2302.<br>
-No need for external libraries.<br>
-Please be careful : some DHT11 are sold with a pull up resistor included ; for "raw" DHT11, place a pull up resistor as specfied in the datasheet between PIN2 and VCC (5k - 10k is OK).
+You get the picture... So there is no way to distinguish between a -9,0°C and a -10,0°C for exemple - as far as I know. This is a hardware bug ; up to now I cannot imagine a clear solution.
+
+The negative temperature bit is set in the MSB bit of the temperature decimal byte (since the precision is just one decimal, only the last 4 bits will be used). When set, the sensor outputs a negative temperature. <br>
+The code just test the presence of this bit, then clears it to compute the decimal part.
+
+The code is made specificaly for the DHT11, but is very simple to adapt to other AOSONG products like the DHT22/AM2302 - as long as they use the same one wire protocol.<br>
+Note : no need for external libraries.<br>
+
+Please be careful : DHT11 bundled with a breakout board are usually sold with the pull up resistor included ; for "raw" DHT11, place a pull up resistor as specfied in the datasheet between PIN2 and VCC (5k - 10k is OK).<br>
+Most of the bundled DHT11 are actually clones with limited specs.
 
 ![dht11-10k pullup](https://github.com/user-attachments/assets/0ce69a6a-042e-4991-ab59-46d307a2e466)
 
