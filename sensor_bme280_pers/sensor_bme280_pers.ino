@@ -1,7 +1,7 @@
 /* This is an adapted code to use the 32 bits integers compensation formula from Bosch API.
  * This code is hence more adapted to ATMega328P microcontroller with limited resources.
+ * See github.com/boschsensortec/BME280_SensorAPI/blob/master/bme280.c
  * Christian de Balorre,  Nov 20, 2024
- *See github.com/boschsensortec/BME280_SensorAPI/blob/master/bme280.c
 */
 
 #define FOSC 16000000UL  // Clock frequency = Oscillator freq .
@@ -467,4 +467,5 @@ void loop() {
   Serial.println();
   delay(3000);
 }
+
 
