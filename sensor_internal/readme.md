@@ -70,7 +70,7 @@ ADC raw value      0x010D   0x0160   0x01E0 <br>
 In three years interval, quite some discreapancy in the typical values ! So unfortunately, we cannot rely on these typical values to calculate a reasonable output.<br>
 <br>
 Also we note two different approches/formulas to make for deviations : <br>
-2015 datasheet : ((ADCW – (273 + 100 – TS_OFFSET)) * 128) / TS_GAIN + 25 ; with ADCW the result of register (ADCH<<8) + ADCL. The final result is in °C. <br>
+2015 datasheet : [((ADCW – (273 + 100 – TS_OFFSET)) * 128) / TS_GAIN] + 25 ; with ADCW the result of register (ADCH<<8) + ADCL. The final result is in °C. <br>
 2018 datasheet : T = (ADCW - Tos) / k ; "Tos is the temperature sensor offset value determined and stored into EEPROM as a part of the production test. k is a fixed coefficient".<br>
 <br>
 We don't have further explainations in the 2018 datasheet, except that a calibration must be done, and the result stored in EEPROM ; how it should be done, no clue. We can only assume that T = temperature in Kelvin.<br>
