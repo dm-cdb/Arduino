@@ -1,3 +1,8 @@
+/* This is an ultra basic code to read a DHT11 sensor.
+ * The code should compile and use under 3kB of flash.
+ * Christian de Balorre, December 22nd, 2025
+ */
+
 #define DHT_PIN 2
 
 uint8_t data[5];
