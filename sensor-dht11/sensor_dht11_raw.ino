@@ -68,6 +68,8 @@ bool readDHT11() {
 
 void setup() {
   Serial.begin(9600);
+  // === Wait for sensor to stabilize ===
+  delay(3000);
 }
 
 void loop() {
