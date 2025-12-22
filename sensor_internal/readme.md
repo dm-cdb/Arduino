@@ -101,7 +101,7 @@ Remove the device from freezer after a while (say one hour), connect it quickly 
 You can also put the device close to a lamp so it can heat up to a relatively high temperature (beware burning etc.) Do not go other 50°C.<br>
 The idea here is to go as extreme as possible, so that the impact of the ambiant temperature far surpass that of the internal working temperature in normal condition.<br>
 Once you have some raw values for given temperatures, there will be only one unknown (the gain) left in the equation, namely :
-[(raw value - (373 - offset)) ] / y + 25 (note : we will iggnore the * 128 coefficient for now) <br>
+[(raw value - (373 - offset)) ] / y + 25 (note : we will ignore the * 128 coefficient for now) <br>
 For 5° = 294 it gives : <br>
 (294 - (373 - 56)) / y + 25 = 5 <-> y = -2944 / -20 = 147.2. We then need to divide this value by 128 : "TS_GAIN is the unsigned fixed point 8-bit temperature sensor gain factor in 1/128th units."<br>
 TS_GAIN = 147.2 / 128 = 1.15 in my case. This is also the slope of line drawn with values for 5° and 25°<br>
