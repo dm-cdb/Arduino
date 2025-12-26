@@ -25,7 +25,7 @@ double GetTemp(void) {
  Serial.println(wADC);
  bitSet(ADCSRA, ADIF);
 
-  // Cf Atmega328P datasheet formula p. 216 : 25 + [(ADCW – (273 + 100 – TS_OFFSET)) * 128] / TS_GAIN
+  // Cf Atmega328P datasheet formula p. 216 (23.8) : 25 + [(ADCW – (273 + 100 – TS_OFFSET)) * 128] / TS_GAIN
   // TS_OFFSET = 56 ; TS_GAIN = 1.15 ; specific to each device, see readme.md
   t = ((float)(wADC - 317.0 ) / 1.15 ) + 25.0;  // T° in degrees Celcius.
   
@@ -48,3 +48,4 @@ void loop() {
     }
    
 }
+
