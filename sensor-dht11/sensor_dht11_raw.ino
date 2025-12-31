@@ -1,5 +1,7 @@
 /* This is an ultra basic code to read a DHT11 sensor.
  * The code should compile and use under 3kB of flash.
+ * It uses the Arduino pulseIn() function to measure the duration of a HIGH pulse.
+ * Please be aware pulseIn() function uses interrupts ; do not disabled them
  * Christian de Balorre, December 22nd, 2025
  */
 
@@ -16,8 +18,7 @@ bool readDHT11() {
 
   // Clear data buffer
   for (int i = 0; i < 5; i++) data[i] = 0;
-  noInterrupts();
-  
+
   // === Start Signal ===
   pinMode(DHT_PIN, OUTPUT);
   digitalWrite(DHT_PIN, LOW);
@@ -64,7 +65,7 @@ bool readDHT11() {
       bitIdx--;
     }
   }
-  interrupts();
+
   // === Checksum ===
   uint8_t checksum = data[0] + data[1] + data[2] + data[3];
   return (checksum == data[4]);
