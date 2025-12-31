@@ -5,7 +5,7 @@
 
 #define DHT_PIN 2
 
-uint8_t data[5];
+uint8_t data[5]; // Humidity on 2 bytes, Temp on 2 bytes, checksum 1 byte
 uint8_t negative;
 unsigned long start;
 char sign;
@@ -36,6 +36,7 @@ bool readDHT11() {
 
 
   // === DHT ACK Response 83µs LOW + 87µs HIGH ===
+  // === This code uses the Arduino pulseIn function to measure the HIGH pulse duration ===
     if (pulseIn(DHT_PIN, HIGH, 200) == 0){
    Serial.println("DHT invalid ACK");
    return false; 
@@ -45,7 +46,7 @@ bool readDHT11() {
   for (int i = 0; i < 40; i++) {
     
     // === Measure HIGH duration ; wait for pulse within 50µs LOW + 28µs (0) | 70µs (1) HIGH ===
-    unsigned long highTime = pulseIn(DHT_PIN, HIGH,200);
+    unsigned long highTime = pulseIn(DHT_PIN, HIGH, 200);
     if (highTime == 0) {
       Serial.println("Data high state too long");
       return false;
