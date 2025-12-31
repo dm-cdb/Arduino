@@ -17,9 +17,7 @@ bool readDHT11() {
   // Clear data buffer
   for (int i = 0; i < 5; i++) data[i] = 0;
   noInterrupts();
-  pinMode(DHT_PIN, INPUT);
-  delay(1);
-
+  
   // === Start Signal ===
   pinMode(DHT_PIN, OUTPUT);
   digitalWrite(DHT_PIN, LOW);
@@ -75,6 +73,7 @@ bool readDHT11() {
 void setup() {
   Serial.begin(9600);
   // === Wait for sensor to stabilize ===
+  pinMode(DHT_PIN, INPUT);
   delay(3000);
 }
 
