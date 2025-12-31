@@ -1,4 +1,6 @@
 /* This is an ultra basic code to read a DHT22 sensor
+ * It uses the Arduino pulseIn() function to measure the duration of a HIGH pulse.
+ * Please be aware pulseIn() function makes use of TIMER0 with interrupts ; do not disabled before !
  * The code should compile and use under 4,5kB of flash
  * Christian de Balorre, December 22nd, 2025
  */
@@ -13,7 +15,7 @@ char sign;
 bool readDHT22() {
    // Clear data buffer
   for (int i = 0; i < 5; i++) data[i] = 0;
-  noInterrupts();
+
   // === Start Signal ===
   pinMode(DHT_PIN, OUTPUT);
   digitalWrite(DHT_PIN, LOW);
@@ -34,7 +36,7 @@ bool readDHT22() {
     Serial.println("DHT invalid ACK");
     return false;
   }
-
+   noInterrupts();
   // === Compute the 40 bits stream of data sent by DHT22 sensors
   for (uint8_t Idx = 0; Idx < 5; Idx++) {
     for (int a = 0; a < 8; a++) {
@@ -95,3 +97,4 @@ void loop() {
 
   delay(3000);  // Minimum delay between reads
 }
+
