@@ -16,7 +16,7 @@ bool readDHT11() {
 
   // Clear data buffer
   for (int i = 0; i < 5; i++) data[i] = 0;
-
+  noInterrupts();
   pinMode(DHT_PIN, INPUT);
   delay(1);
 
@@ -66,7 +66,7 @@ bool readDHT11() {
       bitIdx--;
     }
   }
-
+  interrupts();
   // === Checksum ===
   uint8_t checksum = data[0] + data[1] + data[2] + data[3];
   return (checksum == data[4]);
