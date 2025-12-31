@@ -5,7 +5,7 @@
 
 #define DHT_PIN 2
 
-uint8_t data[5];
+uint8_t data[5]; // For some weird reason, need to have 5 bytes buffer + 1 to compute correct checksum in data[4]
 uint8_t negative;
 unsigned long start;
 char sign;
