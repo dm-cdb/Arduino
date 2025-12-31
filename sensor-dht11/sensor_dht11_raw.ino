@@ -1,7 +1,7 @@
 /* This is an ultra basic code to read a DHT11 sensor.
  * The code should compile and use under 3kB of flash.
  * It uses the Arduino pulseIn() function to measure the duration of a HIGH pulse.
- * Please be aware pulseIn() function uses interrupts ; do not disabled them
+ * Please be aware pulseIn() function makes use of TIMER0 with interrupts ; do not disabled them here.
  * Christian de Balorre, December 22nd, 2025
  */
 
