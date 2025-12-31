@@ -15,7 +15,7 @@ bool readDHT11() {
   uint8_t bitIdx = 7;
 
   // Clear data buffer
-  for (int i = 0; i < 6; i++) data[i] = 0;
+  for (int i = 0; i < 5; i++) data[i] = 0;
 
   pinMode(DHT_PIN, INPUT);
   delay(1);
