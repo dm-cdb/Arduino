@@ -77,7 +77,7 @@ void loop() {
     }
     resh |= (uint16_t)(data[0] << 8);
     resh |= (uint16_t)data[1];
-    float Hum = resh / 10.0;
+    Hum = resh / 10.0;
 
     rest |= (uint16_t)(data[2] << 8);
     rest |= (uint16_t)data[3];
@@ -97,4 +97,5 @@ void loop() {
 
   delay(3000);  // Minimum delay between reads
 }
+
 
