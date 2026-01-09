@@ -174,8 +174,16 @@ Suppose DDRD = 0b00000000 ; all pin INPUT mode
     - PIND = bit(PD5);    // HIGH
     - PIND = bit(PD5);    // LOW
     - PIND = bit(PD5);    // HIGH
+   
+<h3 align="center"> Caution </h3>
+
+Safe GPIO Transitions (Simplified -  see 13.2.3 Switching Between Input and Output of ATMega328P datasheet)
+
+- When switching **Tri-state (High-Z INPUT) → OUTPUT HIGH**, set an **intermediate OUTPUT LOW**.
+- When switching **INPUT with PULLUP → OUTPUT LOW**, set an **intermediate INPUT HIGH-Z (INPUT, no PULLUP)**.
 
     
+
 
 
 
