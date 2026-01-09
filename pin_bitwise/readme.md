@@ -6,10 +6,10 @@
 
 | DDxn | PORTxn | State Name / Electrical Behavior      |
 |------|--------|--------------------------------------|
-| 0    | 0      | HighZ / Floating input           |
+| 0    | 0      | High-Z / Floating input           |
 | 0    | 1      | Input with pull-up (weak high)      |
-| 1    | 0      | Output low (strong 0)               |
-| 1    | 1      | Output high (strong 1)              |
+| 1    | 0      | Output low (sink current)               |
+| 1    | 1      | Output high (source current)              |
 
 
 To manage a pin with an Arduino, we would most often use the well known function :<br>
@@ -176,5 +176,6 @@ Suppose DDRD = 0b00000000 ; all pin INPUT mode
     - PIND = bit(PD5);    // HIGH
 
     
+
 
 
