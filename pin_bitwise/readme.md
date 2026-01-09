@@ -87,34 +87,36 @@ ie :<br>
   
   <h3 align="center">Examples</h3>
   
- 1.  Put Arduino D5 in output mode ; several methods supposing DDRD = 0b00000000 :<br>
+ 1.  Put Arduino pin D5 in output mode ; several methods supposing DDRD = 0b00000000 :<br>
     - DDRD |= 0b00100000; // Setting bit5 (D5) as OUTPUT (this syntax is equivalent to : DDRD = 0b00000000 | 0b00100000)<br>
     - DDRD |= (1<<5);<br>
     - DDRD |= (1<<PD5);<br>
     0b00100000 is called a 'mask' ; DDRD will then be "ORED", "ANDED" etc. with this mask.<br>
-    The first style is pretty straight forward : it does an OR on DDRD register 0b00000000 with 'mask' 0b00100000 =>  DDRD becomes 0b00100000<br>
-    The second and third style involves two operations :
-    - First : do a bitwise shift to the left - basically a  (1<<5) = (0b00000001 << 5) :<br>
+    The first option is pretty straight forward : it does an OR on DDRD register 0b00000000 with 'mask' 0b00100000 =>  DDRD becomes 0b00100000<br>
+    The second and third option involves two operations :
+    - First : do a bitwise shift to the left<br>
       - Each shift left moves the 1 to the next bit position:<br>
         1 << 0 → 00000001<br>
         1 << 1 → 00000010<br>
         1 << 2 → 00000100<br>
-        1 << 5 → 00100000<br>
+        1 << 3 → 00001000<br>
+        1 << 4 → 00010000<br>
+        1 << 5 → 00100000 (our mask result)<br>
         1 << 6 → 01000000<br>
         1 << 7 → 10000000<br>
-     - Second : we have the same operation as the first option :  eventually it does an OR on DDRD with the mask = 0b00000000 | 0b00100000 =>  DDRD becomes 0b00100000<br>
+     - Second : we have the same operation as the first option :  it does an OR on DDRD with the mask = 0b00000000 | 0b00100000 =>  DDRD becomes 0b00100000<br>
      Note that the OR | operator leaves the other bits unchanged whether they are 1 or 0<br>
-     - Suppose we had initially DDRD = 0b10000000 ;  0b10000000 | 0b00100000 =>  DDRD = 0b10100000<br>
+     - Suppose we had initially DDRD = 0b10000000 :  0b10000000 | 0b00100000 =>  DDRD = 0b10100000<br>
      
-3. Put Arduino D5 pin HIGH (5V) (reminder 0 = LOW (ground) ; 1 = HIGH (5V ) :<br>
-   - PORTD |= 0b00100000; // Setting D5 HIGH
+3. Put Arduino pin D5 HIGH (5V) (reminder 0 = LOW (ground) ; 1 = HIGH (5V ) :<br>
+   - PORTD |= 0b00100000; // Setting Arduino pin D5 HIGH
    - PORTD |= (1<<5);
    - PORTD |= (1<<PD5);<br>
    The logic is the same as setting a DDRD bit to 1. Other bits left unchanged.
 
 4. Set Arduino pin D5 LOW (groud) :<br>
 This involves three operations for the last two options ; supposing PORTD register = 0b00100000 :
-   - PORTD &= ~0b00100000; // Setting D5 LOW
+   - PORTD &= ~0b00100000; // Setting Arduino pin D5 LOW
    - PORTD &= ~(1<<5);
    - PORTD &= ~(1<<PD5);<br>
      - First : SHIFT 1 to 5th position => 0b00100000 - this will be our initial mask.
@@ -134,8 +136,8 @@ Three options as usual :
 Suppose DDRD = 0b00000000 ; all pin INPUT mode
    - We set a variable : uint8_t status;
    - status = (PIND & 0b00100000) >> 5; // 0b00100000 is the mask for pin D5
-   - status = (PIND & 0b00100000) >> PD5;
-     Suppose PIND register = 0b00100110 & 0b00100000 :<br>
+   - status = (PIND & 0b00100000) >> PD5;<br>
+Suppose PIND register = 0b00100110 & 0b00100000 :<br>
      Result = 0b00100000<br>
      Shift five positions to right  = 0b00000001 <br>
      Status = 1;<br>
@@ -183,6 +185,7 @@ Safe GPIO Transitions (Simplified -  see 13.2.3 Switching Between Input and Outp
 - When switching **INPUT with PULLUP → OUTPUT LOW**, set an **intermediate INPUT HIGH-Z (INPUT, no PULLUP)**.
 
     
+
 
 
 
