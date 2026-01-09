@@ -14,15 +14,15 @@
 
 To manage a pin with an Arduino, we would most often use the well known function :<br>
 - pinMode(pin, OUTPUT|INPUT|INPUT_PULLUP);
-- digitalWrite(pin, 0|1);
-- digitalRead(pin); // Read the state of a pin in INPUT mode (return 0 if LOW or 1 if HIGH )
+- digitalWrite(pin, 0|1); // Output LOW or HIGH if pin set to output
+- digitalRead(pin);       // Read the state of a pin in INPUT mode (return 0 if LOW or 1 if HIGH )
 
 INPUT_PULLUP will connect the PIN (in INPUT mode) to an internal "pull up resistor" ; that is a resistor (between 20K Ohms and 50K Ohms - around 40K Ohms on one of my Arduino Nano) connected to VCC (5V here).<br>
 The PULL UP resistor will ensure the PIN is in a known state (HIGH), and not "floating", unless the pin is connected to ground.
 
 ![Pin-pull-up](https://github.com/user-attachments/assets/6b77059a-ac19-4ff4-aa4d-36667e929e88)
 
-These Arduino functions actually induce a lot of delays if you want to toggle a led. For example a digitalWrite() can take up to 10µs between two immediate calls of this function.
+These Arduino functions actually induce a lot of delays. For example a digitalWrite() can take up to 10µs between two immediate calls of this function.
 
 Another and quicker way is to access the GPIO registers directly. There are three registers to consider : 
 - DDRn
@@ -176,4 +176,5 @@ Suppose DDRD = 0b00000000 ; all pin INPUT mode
     - PIND = bit(PD5);    // HIGH
 
     
+
 
