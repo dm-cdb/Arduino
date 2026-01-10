@@ -185,7 +185,15 @@ Safe GPIO Transitions (Simplified -  see 13.2.3 Switching Between Input and Outp
 - When switching **Tri-state (High-Z INPUT) to OUTPUT HIGH**, set an **intermediate OUTPUT LOW**.
 - When switching **INPUT with PULLUP to OUTPUT LOW**, set an **intermediate INPUT HIGH-Z (INPUT, no PULLUP)**.
 
+---
+
+  #### Below a schematic for the code used here, from SimulIDE :<br>
+
+  
+![bitwise-simulide](https://github.com/user-attachments/assets/75e7f9c1-3691-499f-9087-165a30c1370f)
+
     
+
 
 
 
