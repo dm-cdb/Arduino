@@ -58,7 +58,7 @@ We can see that by default all pins are in LOW mode (0).<br>
 
 <h3 align="center">General operations on registers</h3>
 
-You can read a [bitwise tutorial](https://docs.arduino.cc/learn/programming/bit-math/) if you are not familiar with &, |, ~, ^ bitwise operator (AND, OR, NOT, XOR) : 
+You can read a [bitwise tutorial](https://docs.arduino.cc/learn/programming/bit-math/) if you are not familiar with & | ~ ^ bitwise operator (AND, OR, NOT, XOR) : 
 
 !! Important : when playing with ATMega328P registers, use avr/io.h definitions : !! <br>
 ie :<br>
@@ -120,7 +120,7 @@ This involves three operations for the last two options ; supposing PORTD regist
    - PORTD &= ~(1<<PD5);<br>
      - First : SHIFT 1 to 5th position => 0b00100000 - this will be our initial mask.
      - Second : NOT the mask (flips all bits of the mask) = 0b11011111
-     - Third : AND with PORTD register :  0b00100000 &  0b11011111 => PORTD = 0b00000000
+     - Third : AND with PORTD register :  0b00100000 &  0b11011111 => PORTD = 0b00000000 <br>
     Again, other bits of PORTD register set to 1 left unchanged since 1 AND 1 = 1
     
 5. Toggle Arduino pin D5 : <br>
@@ -143,7 +143,7 @@ Suppose PIND register 0b00100110 : 0b00100110 & 0b00100000 = 0b00100000 :<br>
 Suppose PIND register 0b00000110 : 0b00000110 & 0b00100000 = 0b00000000<br>
      Shift five positions to right : 0b00000000 >> 5  = 0b00000000 = 0 <br>
      Status = 0; <br>
-Note : you dont really need actually to shift bits here ; you can just test like (status)?(_expression_true_);_expression_false_; 
+Note : you don't actually need to shift bits here ; you can just test like (status)?(_expression_true_);_expression_false_; 
 
 
 
@@ -193,6 +193,7 @@ Safe GPIO Transitions (Simplified -  see 13.2.3 Switching Between Input and Outp
 ![bitwise-simulide](https://github.com/user-attachments/assets/75e7f9c1-3691-499f-9087-165a30c1370f)
 
     
+
 
 
 
