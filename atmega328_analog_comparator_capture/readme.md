@@ -9,7 +9,7 @@ However there is also the possibility to redirect the comparator output to TIMER
 The the output of the comparator will be treated exactly as the ICPn pin. Everything from there will be handled by TIMER1 registers.<br>
 Here we have :<br>
 - Vdd = 5V
-- AIN0 = 2,5V (10k or why not 100k resistor voltage divider
+- AIN0 = 2,5V (10k or why not 100k resistors voltage divider).
 - AIN1 = AC signal between 0v and 5v.
 
 This project will check that the incoming signal at AIN1 is around 500Hz.
