@@ -35,7 +35,7 @@ Program address space :
 
 Data address space:
 - Addess from 0x000 to 0x8FF (0 to 2303)
-- Organized in 2K * 8 bits (each address location stores 8 bits)
+- Organized in 2K * 8 bits (each address location stores 8 bits) and includes :
   - 32 General Purpose Register (r0 -> r31), directly wired to the ALU (Arithmetic and logical unit, aka CPU).
   - 64 I/O registers (GPIO etc.)
   - 160 Extended I/O registers
@@ -69,6 +69,9 @@ The 64 other registers, or special file register, are often addressed relatively
 
 
 
-  
+  Hint : to see how an Arduino or ATMega programmed in C translates in assembly, do
+```
+  avr-objdump -d my_program.elf
+```
 
 
