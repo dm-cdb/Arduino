@@ -43,7 +43,7 @@ Data address space:
 
 Depsite being physically different, they all share the same addressing scheme. However note the following :  
 0x0000 to 0x0020 (32) are the General Purpose Registers addresses. 
-Immediate instuctions (ldi, addi, andi, subi, ori etc.) are valid only on r16 to r31  
+Immediate instuctions (ldi, andi, subi, ori etc.) are valid only on r16 to r31  
 The 64 other registers, or special file register, are often addressed relatively from the last GPR address (0x20), as seen in the diagram above. 
 
 **IMPORTANT** :
