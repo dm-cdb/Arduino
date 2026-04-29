@@ -62,9 +62,9 @@ The 64 other registers, or special file register, are often addressed relatively
 
   To sum up :  
   Data Memory :  
-- Registers             : 0x0000 - 0x001F - 32 GPR
-- I/O registers         : 0x0020 - 0x005F
-- Extended I/O register : 0x0060 - 0x00FF
+- GP registers          : 0x0000 - 0x001F = 32 GPR
+- I/O registers         : 0x0020 - 0x003f - 0x005F = 32 + 32 SFR (or 0x0000 - 0x001F - 0x003F in relatice addressing)
+- Extended I/O register : 0x0060 - 0x00FF = 160 SFR
 - SRAM                  : 0x0100 - RAMEND (0x8FF for ATMega328P)
 
 
