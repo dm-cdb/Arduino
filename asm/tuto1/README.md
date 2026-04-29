@@ -27,7 +27,7 @@ Simple architecture view :
 The ATMega328P has the following caracteristics : 
 
 Program address space :  
-- 32 kbytes of ==FLASH== store the code and constants (like strings etc.)
+- 32 kbytes of <mark>FLASH</mark> store the code and constants (like strings etc.)
   -   Address from 0x0000 0x3FFF(0 to 16283)
   -   Organized in 16K * 16 bits (each address location stores 16 bits). Each code instruction is 16bits wide - cf below
   -   The boot flash section, if any, is stored at the end of the Flash (boot flash section). Its size is specified in the fuse bits -  which are stored in a dedicated memory module.
@@ -39,7 +39,7 @@ Data address space:
   - 32 General Purpose Register (r0 -> r31), directly wired to the ALU (Arithmetic and logical unit, aka CPU).
   - 64 I/O registers (GPIO etc.)
   - 160 Extended I/O registers
-  - 2 kbytes of ==SRAM== to store variables, pointers etc.
+  - 2 kbytes of <mark>SRAM</mark> to store variables, pointers etc.
 
 Depsite being physically different, they all share the same addressing scheme. However note the following :  
 0x0000 to 0x0020 (32) are the General Purpose Registers addresses. 
