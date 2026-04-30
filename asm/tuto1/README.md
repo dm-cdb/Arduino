@@ -45,6 +45,7 @@ Depsite being physically different, they all share the same addressing scheme. H
 0x0000 to 0x0020 (32) are the General Purpose Registers addresses. 
 Immediate instuctions (ldi, andi, subi, ori etc.) are valid only on r16 to r31  
 The 64 other registers, or special file register, are often addressed relatively from the last GPR address (0x20), as seen in the diagram above. 
+Data in SRAM is not directly accessible by the ALU ; one must first load their content into a GPR like r3 or r16.   
 
 **IMPORTANT** :
 - I/O registers within the address range 0x00 - 0x1F are directly bit-accessible using the SBI and CBI instructions. In these registers, the value of single bits can be checked by using the SBIS and SBIC instructions.
@@ -74,4 +75,51 @@ The 64 other registers, or special file register, are often addressed relatively
   avr-objdump -d my_program.elf
 ```
 
+## A word or two about machine code ##
+Programming in assembly is slightly different from programming in machine code !  
+Machine code is a succession of bits (16 for the ATMega328p) representing the instruction and the operands.  
+For exemple, the ANDI instruction does a logical AND on register r16<->r31 and a constant, for example 0x0f  
+The 16 bits machine code will be :
+- 4 bits for the instruction code andi : 0111
+- 4 bits for the constant (K)
+- 4 bits for the register address (d) (minus 16)
+- 4 bits for the constant (K)
 
+So its opcode will be 0111 KKKK dddd KKKK
+
+ie :  
+<code>andi r16, 0x0f
+16 - 16 = 0 =>
+0111 0000 0000 1111
+=> machine code = 0x700f
+=> stored in FLASH as 0f 70 (little endian byte coding, that is LSB then MSB)
+</code>
+
+Other examples : 
+
+The BCLR instruction clear a bit in the SREG register (the status register located at 0x3F - the last 64 I/O register)  
+Its opcode is 1001 0100 1sss 1000  
+- 13 bits for the instruction code
+- 3 bits for the bit position to clear (s)
+
+ie :   
+<code>bclr 5
+1001 0100 1101 1000
+=> machine code = 0x94d8
+=> stored in FLASH as d8 94
+</code>
+
+The ADD instruction add two GPR, storing the result in the destination register.  
+Its opcode is 0000 11rd dddd rrrr  
+- 6 bits for the instruction code
+- 5 bits for the source register (r) (note how the r address is sprayed on two nibbles)
+- 5 bits for the destination register (d)
+
+ie :  
+<code>add r3, r16 ; add content of r16 (source r) with r3 (destination d), store result in r3  
+d = r3  = 00011  => first bit goes to 8th position from left of the opcode
+r = r16 = 10000  => first bit goes to 7th position from ledt of the opcode
+0000 1110 0011 0000
+=> machine code = 0x0e30
+=> stored in FLASH as 30 oe
+</code>
