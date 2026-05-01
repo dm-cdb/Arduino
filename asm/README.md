@@ -46,5 +46,6 @@ The return value is passed in r25-r18, depending on the size of the return value
 - if the return value is 1 byte, it is placed in r24.
 
 Going further :
+- After reading tuto1 about the ATMega328P hardware architecture, please check out [Assembly via Arduino youtube channel](https://www.youtube.com/watch?v=j-qs-gJhxfs&list=PL09ZAP7_T_LmlX5vctZV4PFfZwMNzjX1F&index=1).
 - [A beginner's guide](https://userpages.cs.umbc.edu/alnel1/cmpe311/notes/AVRAssemblerBeginner.pdf)
 - [Working with AVR assembler](https://jensd.dk/doc/arduino/asm/src/lectures/dmp-lab06_new.pdf)
