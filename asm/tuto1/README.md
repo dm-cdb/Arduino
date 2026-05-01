@@ -9,37 +9,37 @@ Three main components are highlighted : the FLASH memory, the SRAM memory, and t
 The ATMega328P has the following caracteristics : 
 
 Program address space :  
-- 32 kbytes of <mark>FLASH</mark> store the code and constants (like strings etc.)
-  -   Address from 0x0000 0x3FFF(0 to 16283)
-  -   Organized in 16K * 16 bits (each address location stores 16 bits). Each code instruction is 16bits wide - cf below
+- 32 kbytes of <mark>FLASH</mark> that store the code and constants (like strings etc.) This memory is read-only.
+  -   Address from 0x0000 0x3FFF (0 to 16283)
+  -   Organized in 16K * 16 bits (each address location stores 16 bits), that is, each code instruction is 16bits wide - see below
   -   The boot flash section, if any, is stored at the end of the Flash (boot flash section). Its size is specified in the fuse bits -  which are stored in a dedicated memory module.
-     - The bit fuses can only be accessed during programming
+     - The bit fuses can only be accessed during programming the microcontroller.
   -   The program counter will point to the next executable instruction address in the FLASH.
 
 Data address space:
-- Addess from 0x000 to 0x8FF (0 to 2303)
+- Addess from 0x000 to 0x8FF (0 to 2303) ; this memory is read & write.
 - Organized in 2K * 8 bits (each address location stores 8 bits) and includes :
   - 32 General Purpose Register (r0 -> r31), directly wired to the ALU (Arithmetic and logical unit, aka CPU).
   - 64 I/O registers (GPIO etc.)
   - 160 Extended I/O registers (located in SRAM).
   - 2 kbytes of <mark>SRAM</mark> to store variables, the stack etc.
 
-Depsite being physically different, they all share the same addressing scheme. However note the following :  
+The data space, depsite being physically different, they all share the same addressing scheme. However note the following :  
 - 0x000 to 0x01F (32) are the General Purpose Registers addresses.  
-  - "Immediate" instuctions (ldi, andi, subi, ori etc.) can be used only on r16 to r31  
-- 0x020 to 0x05F addresses store 64 SFR's, or special file register. They are often addressed relatively from the last GPR address (0x01F), as seen in the diagram above.
+  - "Immediate" instructions (ldi, andi, subi, ori etc.) can only be used on GPR r16 to r31.
+- 0x020 to 0x05F addresses store 64 SFR's (or I/O registers), or special file register. They are often addressed relatively from the last GPR address (0x01F), as seen in the diagram above.
 - 0x060 to 0x0FF addresses store extended SFR (in SRAM)
-- 0x0100 to 0x08FF addresses are available SRAM  
+- 0x0100 to 0x08FF addresses are available SRAM for the stack, variables etc.  
 Note : Data in SRAM is not directly accessible by the ALU ; one must first load/store their content into/from a GPR like r3 or r16.  
 
 <p>
 <img width="703" height="609" alt="bit-io-registers" src="https://github.com/user-attachments/assets/ebd297df-b629-42b0-a350-06e3955736e6" />  
 </p>
 
-**IMPORTANT** :
+**IMPORTANT** :  
 - I/O registers within the address range 0x00 - 0x1F are directly bit-accessible using the SBI and CBI instructions. In these registers, the value of single bits can be checked by using the SBIS and SBIC instructions.
-- When using the I/O specific commands IN and OUT, the I/O addresses 0x00 - 0x3F must be used.
-- When addressing I/O registers as data space using LD and ST instructions, 0x20 must be added to these addresses.
+- When using the I/O specific commands IN and OUT, the I/O relative addresses 0x000 - 0x03F must be used.
+- When addressing I/O registers as data space using LD and ST instructions, absolute addesses must be used.
 
   The diagram below shows the data memory structure more in details. This is important as some assembly instructions will only work within a specific space.
 
