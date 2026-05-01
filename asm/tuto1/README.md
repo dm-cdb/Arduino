@@ -82,10 +82,10 @@ For exemple, the ANDI instruction does a logical AND on register r16<->r31 and a
 The 16 bits machine code will be :
 - 4 bits for the instruction code andi : 0111
 - 4 bits for the constant (K)
-- 4 bits for the register address (d) (minus 16)
+- 4 bits for the register address (d) (minus 16, for the immadiate instructions only work from r16 -> r31 : 1111 = 15)
 - 4 bits for the constant (K)
 
-So its opcode will be 0111 KKKK dddd KKKK
+=> So its opcode will be 0111 KKKK dddd KKKK
 
 ie :  
 <code>andi r16, 0x0f
@@ -97,7 +97,23 @@ ie :
 
 Other examples : 
 
-The BCLR instruction clear a bit in the SREG register (the status register located at 0x3F - the last 64 I/O register)  
+<mark>The SBI instruction</mark> set a bit in an I/O register.  
+Its opcode is 1001 1010 AAAA Abbb  
+- 8 bits for the instruction code
+- 5 bits for the I/O register address (we understand now why we can only reach the first 32 SFR's : 11111 = 1F = 31)  
+- 3 bits for the bit address to be set
+
+ie :   
+<code>sbi DDRB, 3  
+AAAA is 0100 (0x04 address using the relative addressing scheme)  
+bbb is 011
+1001 1010 0010 0011
+=> machine code = 0x9A23
+=> stored in FLASH as 23 9a
+</code>  
+
+
+<mark>The BCLR instruction</mark> clear a bit in the SREG register (the status register located at 0x3F - the last 64 I/O register)  
 Its opcode is 1001 0100 1sss 1000  
 - 13 bits for the instruction code
 - 3 bits for the bit position to clear (s)
@@ -109,7 +125,22 @@ ie :
 => stored in FLASH as d8 94
 </code>
 
-The ADD instruction add two GPR, storing the result in the destination register.  
+<mark> the IN instruction </mark>copy an SFR content into a GPR.  
+Its opcode is 1011 0AAd dddd AAAA  
+- 5 bits for the instruction code
+- 6 bits for the SFR address (note how the address is sprayed on 2 bytes ; also 111111 = 63 = 0x3F = max usable address)
+- 5 bits for the register address (11111 = 31 = 0x1F)
+
+ie :   
+<code>in r13, SREG  
+r13 = 01101
+SREG = 111111 = 0x3F
+1011 0110 1101 1111
+=> machine code = 0xb6df
+=> stored in FLASH as df b6
+</code>
+
+<mark>The ADD instruction</mark> add two GPR, storing the result in the destination register.  
 Its opcode is 0000 11rd dddd rrrr  
 - 6 bits for the instruction code
 - 5 bits for the source register (r) (note how the r address is sprayed on two nibbles)
