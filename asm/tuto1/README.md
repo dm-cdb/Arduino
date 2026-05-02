@@ -12,7 +12,7 @@ The ATMega328P has the following caracteristics :
 Program address space :  
 - 32 kbytes of <mark>FLASH</mark> that store the code and constants (like strings etc.) This memory is read-only.
   -   Address from 0x0000 0x3FFF (0 to 16283)
-  -   Organized in 16K * 16 bits (each address location stores 16 bits), that is, each code instruction is 16bits wide - see below
+  -   Organized in 16K * 16 bits (each address location stores 16 bits), that is, each code instruction is 16 bits wide - see below
   -   The boot flash section, if any, is stored at the end of the Flash. Its size is specified by the fuse bits -  which are stored in a dedicated memory module.
      - The bit fuses can only be accessed during programming the microcontroller.
   -   The program counter will point to the next executable instruction address in the FLASH.
