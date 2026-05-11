@@ -37,27 +37,12 @@ Note : Data in SRAM is not directly accessible by the ALU ; one must first load/
 <img width="703" height="609" alt="bit-io-registers" src="https://github.com/user-attachments/assets/ebd297df-b629-42b0-a350-06e3955736e6" />  
 </p>
 
-**IMPORTANT** :  
-- I/O registers within the address range 0x00 - 0x1F are directly bit-accessible using the SBI and CBI instructions. In these registers, the value of single bits can be checked by using the SBIS and SBIC instructions.
-- When using the I/O specific commands IN and OUT, the I/O relative addresses 0x000 - 0x03F must be used.
-- When addressing I/O registers as data space using LD and ST instructions, absolute addesses must be used.
-
-  The diagram below shows the data memory structure more in details. This is important as some assembly instructions will only work within a specific space.
-
-  <img width="1421" height="545" alt="data_memory" src="https://github.com/user-attachments/assets/5652a39a-e08e-4fef-8c31-c438cee75b05" />
-
-
-  To sum up :  
+To sum up :  
   Data Memory :  
 - GP registers          : 0x0000 - 0x01F = 32 GPR
 - I/O registers         : 0x0020 - 0x03F - 0x05F = 32 + 32 SFR (or 0x000 - 0x001F - 0x003F in relative addressing)
-- Extended I/O register : 0x0060 - 0x0FF = 160 SFR
+- Extended I/O register : 0x0060 - 0x0FF = 160 SFR (located in SRAM)
 - SRAM                  : 0x0100 - RAMEND (0x8FF for ATMega328P)
-
-  Hint : to see how an Arduino or ATMega programmed in C translates in assembly, do
-```
-  avr-objdump -d my_program.elf
-```
 
 ## A word or two about machine code ##
 Programming in assembly is slightly different from programming in machine code !  
