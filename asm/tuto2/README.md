@@ -25,7 +25,7 @@ mov r0, r16  ; IMPORTANT : mov can only be used between General Purpose Register
 
 ## Accessing I/O registers
 1. _in/out_   
-- The first 64 SFR can be accessed with _in_/_out_ instruction   
+- The first 64 SFR's can be accessed with _in_/_out_ instruction   
 - Suppose we want to set DDRD register with 11110000 (bits 0-3 as input, bits 4-7 as output):
 
 ```
@@ -40,10 +40,10 @@ in r16, DDRD
 
 - _in_ means transfer SFR content into ALU registers.  
 - _out_ means transfer content from ALU registers to SFR.  
-- Remember : _in/out_ can only access the first 64 SFR (from relative address 0x000 to 0x03f (the SREG address)   
+- Remember : _in/out_ can only access the first 64 SFR (from relative address 0x000 to 0x03f, ie the SREG address)   
 
 2. _lds/sts_   
-- _lds_ and _sts_ cover the whole SRAM address range.
+- _lds_ and _sts_ cover the whole data address range.
 - We need to use the absolute addressing here : ie PINB relative address 0x003 will be absolute address 0x003 + 0x020 = 0x023   
 - For example, to load DDRD with content of r16   
 
@@ -55,13 +55,14 @@ To load r16 with the content of DDRD
 ```
 lds r16, DDRD
 ```
-Note : _sts/lds_ instruction costs more cpu cycles than _in/out_
+Note : _sts/lds_ instructions cost more cpu cycles than _in/out_
 
 3. _ld/st_ store and load indirect   
-Here we will use pointer register X, Y or Z to store an address in SRAM :
+We must here use the pointer registers X, Y or Z to store an SRAM address :
 - X = r26-r27
 - Y = r28-r29
 - Z = r30-r31
+Then we can use X, Y or Z to store or load data pointed by Z.   
 <br>
 Suppose we reserve 4 bytes in SRAM address space (from 0x100) :   
 
