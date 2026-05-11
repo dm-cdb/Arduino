@@ -41,7 +41,7 @@ _in_ means transfer SFR content into ALU registers.
 _out_ means transfer content from ALU registers to SFR.  
 Rememebr : _in/out_ can only access the first 64 SFR (from relative address 0x000 to 0x03f (the SREG address)   
 
-2. lds/sts  
+2. _lds/sts_   
 _lds_ and _sts_ cover the whole SRAM address range. We need to use the absolute addressing here : ie PINB relative address 0x003 will be absolute address 0x003 + 0x020 = 0x023   
 To load DDRD with content of r16
 ```
@@ -54,7 +54,7 @@ lds r16, DDRD
 ```
 Note : _sts/lds_ instruction costs more cpu cycles than _in/out_
 
-3. store and load indirect   
+3. _ld/st_ store and load indirect   
 Here we will use pointer register X, Y or Z to store an address in SRAM :
 - X = r26-r27
 - Y = r28-r29
@@ -79,24 +79,39 @@ inc r16    ; 0x0c stored @var + 2
 st Z+, r16
 inc r16    ; 0x0d stored @var + 3
 st Z, r16
-```
 
-Note that Z is changing after each Z+, ie Z = 0x103 after the code is executed.   
-We could also fetch var through indexing with std or ldd :   
+ld r20, Z  ; 0x0d stored in r20
+ld r21, -Z ; Z decremented, then content addressed by Z stored in r21 (0x0c)
+ld r22, -Z ; Same operation -> r22 = 0x0b
+ld r23 -Z  ; Same operation -> r23 = 0x0a
 ```
-.text
-ldi r30, lo8(var)
+<br>
+Note that Z is changing after each Z+, or -Z ie Z = 0x103 after the code is executed.   
+<br>
+Same result can be achieved through indexing with std or ldd :   
+
+```
+.section .bss  ; SRAM data space
+var:
+  .space 4
+
+ .text        ; Flash program space
+ldi r30, lo8(var) ; load Z pointer r30-r31 with var SRAM address - lower 8 bits in r30, higher bits in r31
 ldi r31, hi8(var)
 
 ldi r16, 0x0a
-std Z + 2, r16  ; this would store 0x0a @Z address + 2 (ie @0x102 if Z is @0x100)
-```
-or :   
-```
-sbiw r30, 3    ; Z = Z - 3
-ldd Z + 2, r16 ; r16 now contains 0x0c
-```
-Note that the allowed displacement range is 0 < q < 63.  
-Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remains unchanged).
+st Z, r16 ; 0x0a stored @var and Z pointer address incremented (ie if initially Z = 0x100 -> Z = 0x101)
+inc r16    ; 0x0b stored @var + 1
+st Z + 1, r16
+inc r16    ; 0x0c stored @var + 2
+st Z + 2, r16
+inc r16    ; 0x0d stored @var + 3
+st Z + 3, r16
 
-## Accessing constant in Flash
+ld r20, Z + 2  ; r20 = 0x0c
+ld r21, Z + 1  ; r21 = 0x0b
+ld r22, Z      ; r22 = 0x0a
+ld r23 Z + 3   ; r23 = 0x0d
+```
+The allowed displacement range is 0 < q < 63.  
+Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remains unchanged).
