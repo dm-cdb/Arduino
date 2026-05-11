@@ -8,7 +8,7 @@ The diagram below illustrate the complexity of accessing the data memory banks :
 
 ## Accessing the General Purpose Registers (r0-r31)
 1. Immediate or loading constant K in GPR
-- To load a constant in a GPR, you must use the following instruction : _ldi
+- To load a constant in a GPR, you must use the following instruction : _ldi_
 However, only registers r16 -> r31 support this instruction. For example, to load constant 15 in GPR, do :
 ```
 ldi r16, 15 (or 0x0f, or 0b00001111)
@@ -19,7 +19,7 @@ ldi r16, 15 (or 0x0f, or 0b00001111)
 ldi r16, 127
 mov r0, r16  ; IMPORTANT : mov can only be used between General Purpose Registers r0...r31
 ```
-- Likewise, immediate instructions _subi, _ori, _andi, _cpi... work only with GPR r16 -> r31
+- Likewise, immediate instructions _subi_, _ori_, _andi_, _cpi_... work only with GPR r16 -> r31
 
 ## Accessing I/O registers
 1. in/out
@@ -33,22 +33,71 @@ Or we need to load r16 with the content of DDRD
 in r16, DDRD
 ```
 So :  
-_in means input SFR content into ALU registers.  
-_out means output content from ALU registers to SFR.  
-_in/_out can only access the first 64 SFR (from relative address 0x000 to 0x03f (the SREG address)   
+_in_ means input SFR content into ALU registers.  
+_out_ means output content from ALU registers to SFR.  
+_in/out_ can only access the first 64 SFR (from relative address 0x000 to 0x03f (the SREG address)   
 
 2. lds/sts
-_lds and _sts cover the whole SRAM address range. We need to use the absolute addressing here :
+_lds_ and _sts_ cover the whole SRAM address range. We need to use the absolute addressing here :
 PINB relative address 0x003 will be absolute address 0x003 + 0x020 = 0x023
 To load DDRD with content of r16
 ```
+ldi r16, 0xf0
 sts DDRD, r16
 ```
 To load r16 with the content of DDRD
 ```
 lds r16, DDRD
 ```
-Note : sts/lds instruction costs more cpu cycles than in/out
+Note : _sts/lds_ instruction costs more cpu cycles than _in/out_
 
+3. store and load indirect
+Here we will use pointer register X, Y or Z to store an address in SRAM :
+- X = r26-r27
+- Y = r28-r29
+- Z = r30-r31
+<br>
+Suppose we reserve 4 bytes in SRAM address space (from 0x100) :
+```
+;----------------------
+; SRAM space
+;----------------------
+.section .bss
+var:
+  .space 4
 
-4. 
+;----------------------
+; Flash space for programm
+;----------------------
+.text
+ldi r30, lo8(var) ; load Z pointer r30-r31 with var SRAM address - lower 8 bits in r30, higher bits in r31
+ldi r31, hi8(var)
+
+ldi r16, 0x0a
+st Z+, r16 ; 0x0a stored @var and Z pointer address incremented (ie if initially Z = 0x100 -> Z = 0x101)
+inc r16    ; 0x0b stored @var + 1
+st Z+, r16
+inc r16    ; 0x0c stored @var + 2
+st Z+, r16
+inc r16    ; 0x0d stored @var + 3
+st Z, r16
+```
+Note that Z is changing after each Z+, ie Z = 0x103 after the code is executed.   
+We could also fetch var through indexing with std or ldd :   
+```
+.text
+ldi r30, lo8(var)
+ldi r31, hi8(var)
+
+ldi r16, 0x0a
+std Z + 2, r16  ; this would store 0x0a @Z address + 2 (ie @0x102 if Z is @0x100)
+```
+or :   
+```
+sbiw r30, 3    ; Z = Z - 3
+ldd Z + 2, r16 ; r16 now contains 0x0c
+```
+Note that the allowed displacement range is 0 < q < 63.  
+Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remains unchanged).
+
+## Accessing constant in Flash
