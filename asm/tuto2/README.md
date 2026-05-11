@@ -7,43 +7,45 @@ The diagram below illustrates the complexity of accessing the data memory banks 
 
 
 ## Accessing the General Purpose Registers (r0-r31)
-1. _ldi_ Immediate loading of constant K in GPR   
-- To load a constant in a GPR, you must use the following instruction : _ldi_
-However, only registers r16 -> r31 support this instruction. For example, to load constant 15 in GPR, do :
+1. _ldi_   
+- To load a constant in a GPR, you must use the following instruction : _ldi_   
+- Only registers r16 -> r31 support this instruction.
+- For example, to load constant 15 in GPR, do :
 ```
 ldi r16, 15 (or 0x0f, or 0b00001111)
 ```
 2. Using r0...r15   
-- To load a constant K in, say, r0, will be a two steps operation, involving the _mov_ instruction
+- Loading constant K in, say, r0, will be a two steps operation, involving the _mov_ instruction   
 ```
 ldi r16, 127
 mov r0, r16  ; IMPORTANT : mov can only be used between General Purpose Registers r0...r31
 ```
-- Likewise, immediate instructions _subi_, _ori_, _andi_, _cpi_... work only with GPR r16 -> r31
+- Likewise, immediate instructions _subi_, _ori_, _andi_, _cpi_... work only with GPR r16 -> r31   
 
 ## Accessing I/O registers
 1. _in/out_   
-We can access the first 64 SFR with _in_/_out_ instruction
-Suppose we want to set DDRD register with 11110000 (bits 0-3 as input, bits 4-7 as output). This would be a two step operations :
+- The first 64 SFR can be accessed with _in_/_out_ instruction   
+- Suppose we want to set DDRD register with 11110000 (bits 0-3 as input, bits 4-7 as output):
 
 ```
 ldi r16 0xf0
 out DDRD, r16
 ```
-Or we need to load r16 with the content of DDRD   
+- Or we need to load r16 with the content of DDRD   
 
 ```
 in r16, DDRD
 ```
 
-So :  
-_in_ means transfer SFR content into ALU registers.  
-_out_ means transfer content from ALU registers to SFR.  
-Rememebr : _in/out_ can only access the first 64 SFR (from relative address 0x000 to 0x03f (the SREG address)   
+- _in_ means transfer SFR content into ALU registers.  
+- _out_ means transfer content from ALU registers to SFR.  
+- Remember : _in/out_ can only access the first 64 SFR (from relative address 0x000 to 0x03f (the SREG address)   
 
 2. _lds/sts_   
-_lds_ and _sts_ cover the whole SRAM address range. We need to use the absolute addressing here : ie PINB relative address 0x003 will be absolute address 0x003 + 0x020 = 0x023   
-To load DDRD with content of r16
+- _lds_ and _sts_ cover the whole SRAM address range.
+- We need to use the absolute addressing here : ie PINB relative address 0x003 will be absolute address 0x003 + 0x020 = 0x023   
+- For example, to load DDRD with content of r16   
+
 ```
 ldi r16, 0xf0
 sts DDRD, r16
@@ -60,7 +62,7 @@ Here we will use pointer register X, Y or Z to store an address in SRAM :
 - Y = r28-r29
 - Z = r30-r31
 <br>
-Suppose we reserve 4 bytes in SRAM address space (from 0x100) :
+Suppose we reserve 4 bytes in SRAM address space (from 0x100) :   
 
 ```
 .section .bss  ; SRAM data space
@@ -85,10 +87,9 @@ ld r21, -Z ; Z decremented, then content addressed by Z stored in r21 (0x0c)
 ld r22, -Z ; Same operation -> r22 = 0x0b
 ld r23 -Z  ; Same operation -> r23 = 0x0a
 ```
-<br>
-Note that Z is changing after each Z+, or -Z ie Z = 0x103 after the code is executed.   
-<br>
-Same result can be achieved through indexing with std or ldd :   
+
+- Note that Z is changing after each Z+, or -Z   
+- Same result can be achieved through indexing with std or ldd :   
 
 ```
 .section .bss  ; SRAM data space
@@ -100,18 +101,18 @@ ldi r30, lo8(var) ; load Z pointer r30-r31 with var SRAM address - lower 8 bits 
 ldi r31, hi8(var)
 
 ldi r16, 0x0a
-st Z, r16 ; 0x0a stored @var and Z pointer address incremented (ie if initially Z = 0x100 -> Z = 0x101)
+st Z, r16 ; 0x0a stored @var
 inc r16    ; 0x0b stored @var + 1
-st Z + 1, r16
+std Z + 1, r16
 inc r16    ; 0x0c stored @var + 2
-st Z + 2, r16
+std Z + 2, r16
 inc r16    ; 0x0d stored @var + 3
-st Z + 3, r16
+std Z + 3, r16
 
-ld r20, Z + 2  ; r20 = 0x0c
-ld r21, Z + 1  ; r21 = 0x0b
-ld r22, Z      ; r22 = 0x0a
-ld r23 Z + 3   ; r23 = 0x0d
+ldd r20, Z + 2  ; r20 = 0x0c
+ldd r21, Z + 1  ; r21 = 0x0b
+ld r22, Z      ; r22 = 0x0a  ; no offset - we simply use ld
+ldd r23, Z + 3   ; r23 = 0x0d
 ```
-The allowed displacement range is 0 < q < 63.  
-Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remains unchanged).
+- The allowed displacement range is 0 < q < 63.  
+- Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remains unchanged).
