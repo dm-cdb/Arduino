@@ -20,7 +20,7 @@ Program address space :
 Data address space:
 - Addess from 0x000 to 0x8FF (0 to 2303) ; this memory is read & write.
 - Organized in 2K * 8 bits (each address location stores 8 bits) and includes :
-  - 32 General Purpose Register (r0 -> r31), directly wired to the ALU (Arithmetic and logical unit, aka CPU).
+  - 32 General Purpose Register (r0 -> r31), directly wired to the ALU (_Arithmetic and logical unit_, aka CPU).
   - 64 I/O registers (GPIO etc.), also named SFR (Special File Register)
   - 160 Extended I/O registers (located in SRAM).
   - 2 kbytes of <mark>SRAM</mark> to store variables, the stack etc.
@@ -31,7 +31,7 @@ The data space, depsite being physically dispatched on different physical module
 - 0x020 to 0x05F addresses store the first 64 I/O registers. They are often addressed relatively from the last GPR address (0x01F).
 - 0x060 to 0x0FF addresses store extended I/O (in SRAM)
 - 0x0100 to 0x08FF addresses are available SRAM for the stack, variables etc.  
-Note : Data in SRAM is not directly accessible by the ALU ; one must first load/store their content into/from a GPR like r3 or r16.  
+Note : Data in SRAM is not directly accessible by the ALU ; one must first load/store their content into/from a GPR.  
 
 <p>
 <img width="703" height="609" alt="bit-io-registers" src="https://github.com/user-attachments/assets/ebd297df-b629-42b0-a350-06e3955736e6" />  
