@@ -28,7 +28,7 @@ mov r0, r16  ; IMPORTANT : mov can only be used between General Purpose Register
 - Suppose we want to set DDRD register with 11110000 (bits 0-3 as input, bits 4-7 as output):
 
 ```
-ldi r16 0xf0
+ldi r16, 0xf0
 out DDRD, r16
 ```
 - Or we need to load r16 with the content of DDRD   
@@ -101,7 +101,7 @@ ldi r30, lo8(var) ; load Z pointer r30-r31 with var SRAM address - lower 8 bits 
 ldi r31, hi8(var)
 
 ldi r16, 0x0a
-st Z, r16 ; 0x0a stored @var
+st Z, r16  ; 0x0a stored @var
 inc r16    ; 0x0b stored @var + 1
 std Z + 1, r16
 inc r16    ; 0x0c stored @var + 2
@@ -111,8 +111,8 @@ std Z + 3, r16
 
 ldd r20, Z + 2  ; r20 = 0x0c
 ldd r21, Z + 1  ; r21 = 0x0b
-ld r22, Z      ; r22 = 0x0a  ; no offset - we simply use ld
-ldd r23, Z + 3   ; r23 = 0x0d
+ld r22, Z       ; r22 = 0x0a  ; no offset - we simply use ld
+ldd r23, Z + 3  ; r23 = 0x0d
 ```
 - The allowed displacement range is 0 < q < 63.  
 - Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remains unchanged).
