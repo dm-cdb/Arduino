@@ -22,7 +22,7 @@ mov r0, r16  ; IMPORTANT : mov can only be used between General Purpose Register
 - Likewise, immediate instructions _subi_, _ori_, _andi_, _cpi_... work only with GPR r16 -> r31
 
 ## Accessing I/O registers
-1. _in/out_
+1. _in/out_   
 We can access the first 64 SFR with _in_/_out_ instruction
 Suppose we want to set DDRD register with 11110000 (bits 0-3 as input, bits 4-7 as output). This would be a two step operations :
 
