@@ -1,7 +1,7 @@
 This directory contains small programs in assembly for the Arduino based on the ATMega328P.<br>
 There are two files using Arduino IDE : a '.ino' file and a '.S' file.<br>
-The .ino file contains the usual C++ directives, setup() and loop() functions. Functions in the .S file called by the .ino file are first declared in the extern "C" bloc.<br>
-This compiler/linker directive is necessary so that the function names declared inside are not mangled by the c++ compiler. The extern directive really means : "the functions enclosed are declared in another file and are not in C++, don't mess with their names inside."<br>
+The .ino file contains the usual C++ directives, setup() and loop() functions. Functions in the .S file called by the .ino file are first declared in the _extern "C"_ bloc.<br>
+This directive is necessary so that the function names declared inside are not mangled by the c++ compiler. The _extern_ directive really means : "the functions enclosed in this bloc are declared in another file and are not part offC++, don't mess with their names."<br>
 One can also declare a global variable if needed.<br>
 Ex :<br>
 <code>
