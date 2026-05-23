@@ -1,15 +1,19 @@
-# Storing and loading in the data space
+# Storing and loading in the program space
 
-This tuto explains how to store and load constant in the program space (Flash memory).  
-SRAM is in short supply, so using FLASH memory instead can be a good option.   
-However, this space is read-only during program execution, so only CONSTANT can be loaded and accessed. We'll find therefore mostly strings for error messages etc.  
-Below are exemple of how strings can be stored in FLASH :  
+This tuto explains how to store and load constant in the program space, that is, Flash memory.  
+The ATMega 328P (found for example on Arduino Uno or Nano) has 32Kb of Flash memory (as opposed to 2Kb of Sram). 
+- Sram is organised in one byte chunck (8 bits).    
+- On the other hand, Flash memory is organised in 2 bytes chunks : 16365 possible addresses * 2 bytes = 32730 kB
+-> Each machine instruction is 16 bits long, so it does make complete sense. We can thus write 16365 assembly instructions, to simplify.
+
+As SRAM is in short supply, using FLASH memory instead can be a good option. However, this space is read-only during program execution, so only CONSTANTS can be loaded and accessed in Flash.  
+Below are exemples of how strings can be stored in FLASH and accessed using _lpm_ instruction (load from program memor) :  
 
 ```
 ;----------------------
 ; FLASH constant data
 ;----------------------
-.section .data
+.section .text
 numerals:
     .byte 0x01, 0x02, 0x03
 lun:
@@ -24,11 +28,11 @@ jours:
     .asciz "Vendredi"
     .asciz "Samedi"
 ```
-Note : FLASH addresses are 16bits, and store 2 bytes. This is why it must be aligned (with 2 bytes).   
+Note : FLASH addresses are 16bits, and store 2 bytes. This is why constant data must be _aligned_ (within 2 bytes boundaries).   
 .ascii "Mer" ; because it is 3 bytes (odd), this directive will probably generates a compiler error.  
-.asciz directive adds a '0' at the end of the string.  
+_.asciz_ directive adds a '0' at the end of the string and makes sure it is _aligned_. 
 
-We access constant data in flash with the _lpm_ instruction, again using the Z pointer (r30, r31).
+We access constant data in flash with the _lpm_ instruction, using the Z pointer (r30, r31) registers.
 
 ```
 ldi ZH, hi8(numerals)   ; MSB of numerals FLASH address loaded in r31
@@ -46,13 +50,23 @@ Remember :
 | SRAM (data memory)     | byte  (8 bits) addressed |
 | Flash (program memory) | word (16 bits) addressed |
 
-In old or different avr asm compiler, we may find the following code :   
+In old or different avr asm compilers, we may find the following code :   
 ```
 ldi ZH, high(numerals*2)   ; 16 bits address converted to 8 bits
 ldi ZL, low(numerals*2)    ;
 ```
-The explaination is that we must convert a 16 bits address into two 8 bits addresses.   
+The explaination is that we must convert a 16 bits address into 8 bits addresses : 
+```
+Word address     BYTE addresses in Flash
+------------     ------------------------------
+0x0000        -> 0x0000 and 0x0001
 
+0x0001        -> 0x0002 and 0x0003
+
+0x0002        -> 0x0004 and 0x0005
+
+0x0003        -> 0x0006 and 0x0007
+```
 Suppose numerals: is located at Flash word address:  
 ```
 numerals = 0x0123   ; word address
