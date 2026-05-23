@@ -46,7 +46,7 @@ lpm r16, Z+            ; 0x01 loaded in r16 ; Z address pointer is incremented (
 lpm r17, Z             ; 0x02 loaded in r17
 ```
 
-** IMPORTANT **
+**IMPORTANT**   
 Remember :  
 
 | Memory type            | Addressing               |
@@ -108,8 +108,8 @@ We can parse a string this way :
 
 ```
 loopchar:
-  ldi ZH, hi8(lun) ; initialize Z pointer address
-  ldi ZL, lo8(lun)
+  ldi ZH, hi8(mon) ; initialize Z pointer address
+  ldi ZL, lo8(mon)
   lpm r16, Z+      ; load first byte @ lun: Flash address in r16 ; have Z points to next byte address
   tst r16          ; is r 16 = 0 ?
   breq end         ; then end of string
@@ -122,7 +122,7 @@ end:
   ldi r16, 0xoa   ; send ascii LF (Line Feed) byte to uart routine
   rcall uart_send
 ```
-Please note that after this code Z will point to lun flash address + 5.  
+Please note that after this code Z will point to _mon:_ flash address + 5.  
 
 
 
