@@ -1,10 +1,10 @@
-# Storing and loading in the program space
+# Storing and loading constant data in the program space
 
-This tutorial explains how to store and load constant in the program space, that is, Flash memory.  
-The ATMega 328P (found for example on Arduino Uno or Nano) has 32Kb of Flash memory (as opposed to 2Kb of Sram).
-Addressing scheme for Sram and Flash banks is on 16 bits, but :
+This tutorial explains how to store and load constant in the program space, that is Flash memory.  
+The ATMega 328P (found for example on Arduino Uno or Nano) has 32Kb of Flash memory (as opposed to 2Kb of Sram).   
+Addressing scheme for Sram and Flash memory banks is on 16 bits, but :   
 - Sram is organised in one byte chunck (8 bits).    
-- On the other hand, Flash memory is organised in 2 bytes chunks : 16365 possible addresses * 2 bytes = 32730 kB
+- On the other hand, Flash memory is organised in 2 bytes chunks ; this makes for 16365 possible addresses * 2 bytes = 32730 kB   
 -> CPU instruction is 16 bits long on the ATMega 328P, so it does make complete sense. We can thus write up to 16365 assembly instructions, to simplify.
 
 As SRAM is in short supply, using FLASH memory instead can be a good option. However, this space is read-only during program execution, so only **CONSTANTS** can be loaded and accessed in Flash.  
@@ -14,27 +14,27 @@ Below are exemples of how strings can be stored in FLASH and accessed using _lpm
 ;----------------------
 ; FLASH constant data
 ;----------------------
-.section .text
+.section .rodata           ; this directive = load in program memory, not executable data
 numerals:
     .byte 0x01, 0x02, 0x03
-lun:
-    .byte 'l','u','d','i',0
-jours:
-    .byte 'D','i','m','a','n','c','h','e',0
-    .asciz "Lundi"
-    .asciz "Mardi"
-    .ascii "Mercredi"
-    .byte 0
-    .asciz "Jeudi"
-    .asciz "Vendredi"
-    .asciz "Samedi"
+mon:
+    .byte 'M','o','n','d','a','y',0
+days:
+    .byte 'S','u','n','d','a','y',0
+    .asciz "Monday"
+    .asciz "Tuesday"
+    .ascii "Wednesday"
+    .byte 0   ; ends string "Wednesday" with 0
+    .asciz "Thursdayi"
+    .asciz "Fridayi"
+    .asciz "Saturday"
 ```
 Note : Each FLASH addresses stores 2 bytes of data. This is why constant data must be _aligned_ (within 2 bytes boundaries).   
-The following directives has different behaviours:   
-.ascii "Mer" ; because it is 3 bytes (odd), this directive will probably generates a compiler error.  
+The following directives can lead to different behaviours:   
+.ascii "Wed" ; because it is 3 bytes (odd), this directive will probably generates a compiler error.  
 _.asciz_ directive adds a '0' at the end of the string and makes sure it is _aligned_. 
 
-# Accessing data in the program space   
+## Accessing data in the program space   
 
 We access constant data in flash with the _lpm_ instruction, using the Z pointer (r30, r31) registers.
 
@@ -85,7 +85,24 @@ ldi ZL, low(0x0246)
 
 (Arduino IDE asm compiler does the conversion automatically with the lo8 and hi8 macro.)
 
-# Parsing a string in Flash   
+## Indirect addressing with displacement in Flash
+
+There is no equivalent _ldd_ or _std_ with _lpm_. So to access a specific byte, we need some maths like in the following code :
+
+```
+table:
+    .db 10, 20, 30, 40, 50
+
+ldi ZH, hi8h(table)
+ldi ZL, lo8(table)
+
+adiw ZL, 3   ; shift address + 3
+lpm r18, Z
+```
+
+Result : r18 now has 40
+
+## Parsing a string in Flash   
 
 We can parse a string this way :
 
