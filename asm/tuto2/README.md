@@ -61,8 +61,8 @@ Note : _sts/lds_ instructions cost more cpu cycles than _in/out_
 We must here use the pointer registers X, Y or Z to store an SRAM address :
 - X = r26-r27
 - Y = r28-r29
-- Z = r30-r31
-Then we can use X, Y or Z to store or load data pointed by Z.   
+- Z = r30-r31   
+We can then use X, Y or Z symbols to store or load data to/from the adress loaded at these pointers.   
 <br>
 Suppose we reserve 4 bytes in SRAM address space (from 0x100) :   
 
@@ -103,12 +103,12 @@ ldi r30, lo8(var) ; load Z pointer r30-r31 with var SRAM address - lower 8 bits 
 ldi r31, hi8(var)
 
 ldi r16, 0x0a
-st Z, r16  ; 0x0a stored @var
-inc r16    ; 0x0b stored @var + 1
+st Z, r16  ; 0x0a stored @var SRAM address
+inc r16    ; 0x0b stored @var SRAM address + 1
 std Z + 1, r16
-inc r16    ; 0x0c stored @var + 2
+inc r16    ; 0x0c stored @var SRAM address + 2
 std Z + 2, r16
-inc r16    ; 0x0d stored @var + 3
+inc r16    ; 0x0d stored @var SRAM address + 3
 std Z + 3, r16
 
 ldd r20, Z + 2  ; r20 = 0x0c
@@ -117,4 +117,4 @@ ld r22, Z       ; r22 = 0x0a  ; no offset - we simply use ld
 ldd r23, Z + 3  ; r23 = 0x0d
 ```
 - The allowed displacement range is 0 < q < 63.  
-- Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remains unchanged).
+- Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remain unchanged).
