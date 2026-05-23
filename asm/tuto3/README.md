@@ -1,13 +1,14 @@
 # Storing and loading in the program space
 
-This tuto explains how to store and load constant in the program space, that is, Flash memory.  
-The ATMega 328P (found for example on Arduino Uno or Nano) has 32Kb of Flash memory (as opposed to 2Kb of Sram). 
+This tutorial explains how to store and load constant in the program space, that is, Flash memory.  
+The ATMega 328P (found for example on Arduino Uno or Nano) has 32Kb of Flash memory (as opposed to 2Kb of Sram).
+Addressing scheme for Sram and Flash banks is on 16 bits, but :
 - Sram is organised in one byte chunck (8 bits).    
 - On the other hand, Flash memory is organised in 2 bytes chunks : 16365 possible addresses * 2 bytes = 32730 kB
--> Each machine instruction is 16 bits long, so it does make complete sense. We can thus write 16365 assembly instructions, to simplify.
+-> CPU instruction is 16 bits long on the ATMega 328P, so it does make complete sense. We can thus write up to 16365 assembly instructions, to simplify.
 
-As SRAM is in short supply, using FLASH memory instead can be a good option. However, this space is read-only during program execution, so only CONSTANTS can be loaded and accessed in Flash.  
-Below are exemples of how strings can be stored in FLASH and accessed using _lpm_ instruction (load from program memor) :  
+As SRAM is in short supply, using FLASH memory instead can be a good option. However, this space is read-only during program execution, so only **CONSTANTS** can be loaded and accessed in Flash.  
+Below are exemples of how strings can be stored in FLASH and accessed using _lpm_ instruction (load from program memory) :  
 
 ```
 ;----------------------
@@ -28,9 +29,12 @@ jours:
     .asciz "Vendredi"
     .asciz "Samedi"
 ```
-Note : FLASH addresses are 16bits, and store 2 bytes. This is why constant data must be _aligned_ (within 2 bytes boundaries).   
+Note : Each FLASH addresses stores 2 bytes of data. This is why constant data must be _aligned_ (within 2 bytes boundaries).   
+The following directives has different behaviours:   
 .ascii "Mer" ; because it is 3 bytes (odd), this directive will probably generates a compiler error.  
 _.asciz_ directive adds a '0' at the end of the string and makes sure it is _aligned_. 
+
+# Accessing data in the program space   
 
 We access constant data in flash with the _lpm_ instruction, using the Z pointer (r30, r31) registers.
 
@@ -55,7 +59,7 @@ In old or different avr asm compilers, we may find the following code :
 ldi ZH, high(numerals*2)   ; 16 bits address converted to 8 bits
 ldi ZL, low(numerals*2)    ;
 ```
-The explaination is that we must convert a 16 bits address into 8 bits addresses : 
+The explaination is that we must convert the 16 bits address into 8 bits addresses : 
 ```
 Word address     BYTE addresses in Flash
 ------------     ------------------------------
@@ -67,14 +71,11 @@ Word address     BYTE addresses in Flash
 
 0x0003        -> 0x0006 and 0x0007
 ```
-Suppose numerals: is located at Flash word address:  
-```
-numerals = 0x0123   ; word address
-```
+=> BYTE address = WORD address * 2  
+Suppose numerals: is located @ Flash word address 0x0123:  
 Then the actual byte address in Flash is:   
-```
 0x0123 * 2 = 0x0246
-```
+
 
 So the code loads:   
 ```
@@ -82,15 +83,17 @@ ldi ZH, high(0x0246)
 ldi ZL, low(0x0246)
 ```
 
-Arduino IDE asm compiler does the conversion automatically with the lo8 and hi8 macro.
+(Arduino IDE asm compiler does the conversion automatically with the lo8 and hi8 macro.)
+
+# Parsing a string in Flash   
 
 We can parse a string this way :
 
 ```
 loopchar:
-  ldi ZH, hi8(lun) ; initiate Z pointer address
+  ldi ZH, hi8(lun) ; initialize Z pointer address
   ldi ZL, lo8(lun)
-  lpm r16, Z+      ; load first byte at lun Flash address in r16
+  lpm r16, Z+      ; load first byte @ lun: Flash address in r16 ; have Z points to next byte address
   tst r16          ; is r 16 = 0 ?
   breq end         ; then end of string
   rcall uart_send  ; call uart routine to send content of r16 to serial line (we suppose r16 will then be loaded in UDR0 register)
@@ -102,7 +105,7 @@ end:
   ldi r16, 0xoa   ; send ascii LF (Line Feed) byte to uart routine
   rcall uart_send
 ```
-Please note that after this code Z will point to lun: flash address + 5.  
+Please note that after this code Z will point to lun flash address + 5.  
 
 
 
