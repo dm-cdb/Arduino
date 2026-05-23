@@ -67,7 +67,7 @@ We can then use X, Y or Z symbols to store or load data to/from the adress loade
 Suppose we reserve 4 bytes in SRAM address space (from 0x100) :   
 
 ```
-.section .bss  ; SRAM data space
+.section .bss  ; SRAM data space (uninitialized variable only)
 var:
   .space 4
 
@@ -118,3 +118,28 @@ ldd r23, Z + 3  ; r23 = 0x0d
 ```
 - The allowed displacement range is 0 < q < 63.  
 - Z does not change after an _ldd_ or _std_ instruction (ie r30-r31 remain unchanged).
+
+### Note on initialized variable
+
+It is possible to initialize a variable using the _.section .data_ directives as in :  
+```
+.section .data
+myValue:
+    .byte 42      ; initialized variable = 42
+
+.section .text
+
+setup:
+    ; Load myValue into r16
+    lds r16, myValue
+
+    ; Example: increment it
+    inc r16
+
+    ; Store it back
+    sts myValue, r16
+
+    ret
+```
+**Important** : .data directive initializes the variable in Flash, then copies it to SRAM.
+
